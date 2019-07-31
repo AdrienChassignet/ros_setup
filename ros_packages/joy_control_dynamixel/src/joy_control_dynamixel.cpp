@@ -13,9 +13,9 @@
 namespace joy2dynamixel
 {
   
-  #define MAX_POS 2550
   #define ZERO_POS 2048
-  #define MIN_POS 1550
+  #define MIN_POS(amp) (ZERO_POS-amp/2)
+  #define MAX_POS(amp) (ZERO_POS+amp/2)
 
   class Joy2Dynamixel
   {
@@ -33,11 +33,8 @@ namespace joy2dynamixel
     int amplitude_, dyn_pos_;
     trajectory_msgs::JointTrajectory new_point_;
     
-    auto min_pos = [&a]{ return ZERO_POS - amplitude_/2; };
-    auto max_pos = [&a]{ return ZERO_POS + amplitude_/2; };
-    
     ros::Subscriber joy_sub_;
-    ros::Subscriber ampli_sub;
+    ros::Subscriber ampli_sub_;
     ros::Publisher joint_pub_;
     // ros::ServiceClient dyn_cmd_client_;
   };
@@ -50,7 +47,7 @@ namespace joy2dynamixel
     circ_button_(1),
     cross_button_(0),
     dyn_pos_(ZERO_POS),
-    amplitude_(200)
+    amplitude_(600)
   {
     nh_.param("dynamixel_position", dyn_pos_, dyn_pos_);
     nh_.param("dynamixel_amplitude", amplitude_, amplitude_);
@@ -76,18 +73,18 @@ namespace joy2dynamixel
     int new_pos = dyn_pos_;
 
     if(joy->buttons[square_button_])
-      new_pos = min_pos();
+      new_pos = MIN_POS(amplitude_);
     else if(joy->buttons[cross_button_])
       new_pos = ZERO_POS;
     else if(joy->buttons[circ_button_])
-      new_pos = max_pos();
+      new_pos = MAX_POS(amplitude_);
     else
     {
-      new_pos = ZERO_POS - (max_pos()-ZERO_POS)*(joy->axes[lr_left_joy_]);
-      if(new_pos > max_pos())
-          new_pos = max_pos();
-      if(new_pos < min_pos())
-          new_pos = min_pos();
+      new_pos = ZERO_POS - (MAX_POS(amplitude_)-ZERO_POS)*(joy->axes[lr_left_joy_]);
+      if(new_pos > MAX_POS(amplitude_))
+          new_pos = MAX_POS(amplitude_);
+      if(new_pos < MIN_POS(amplitude_))
+          new_pos = MIN_POS(amplitude_);
     }
 
     if(new_pos != dyn_pos_)
@@ -111,21 +108,19 @@ namespace joy2dynamixel
   {
     joint_pub_.publish(new_point_);
   }
-
-
-  int main(int argc, char** argv)
-  {
-    ros::init(argc, argv, "joy_2_dynamixel");
-    Joy2Dynamixel joy_2_dynamixel;
-
-    ros::Rate loop_rate(20);
-    while (ros::ok())
-    {
-      joy_2_dynamixel.updateJointTraj();
-      ros::spinOnce();
-      loop_rate.sleep();
-    }
-
-    // ros::spin();
-  }
 } //namespace joy2dynamixel
+
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "joy_2_dynamixel");
+  joy2dynamixel::Joy2Dynamixel joy_2_dynamixel;
+
+  ros::Rate loop_rate(20);
+  while (ros::ok())
+  {
+    joy_2_dynamixel.updateJointTraj();
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
+    // ros::spin();
+}
