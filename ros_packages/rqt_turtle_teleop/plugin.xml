@@ -1,0 +1,15 @@
+<library path="lib/librqt_turtle_teleop">
+  <class name="rqt_turtle_teleop/MyPlugin" type="rqt_turtle_teleop::MyPlugin" base_class_type="rqt_gui_cpp::Plugin">
+    <description>
+      GUI for turtle simulation controlled by a PS4 joystick.
+    </description>
+    <qtgui>
+      <group>
+        <label>Custom plugins</label>
+        <statustip>Plugins made for custom applications.</statustip>
+      </group>
+      <label>Turtlesim teleoperation</label>
+      <statustip>GUI for turtlesim teleop.</statustip>
+    </qtgui>
+  </class>
+</library>
