@@ -1,0 +1,46 @@
+<launch>
+ <!-- Dynamixel Node-->
+  <arg name="usb_port"                default="/dev/ttyUSB0"/>
+  <arg name="dxl_baud_rate"           default="1000000"/>
+  <arg name="namespace"               default="dynamixel_workbench"/>
+
+  <param name="dynamixel_info"          value="$(find dynamixel_workbench_controllers)/config/test_mx64.yaml"/>
+
+  <node name="$(arg namespace)" pkg="dynamixel_workbench_controllers" type="dynamixel_workbench_controllers"
+        required="true" output="screen" args="$(arg usb_port) $(arg dxl_baud_rate)">
+    <rosparam>
+      publish_period: 0.010
+      dxl_read_period: 0.010
+      dxl_write_period: 0.010
+      use_moveit: false
+      use_joint_states_topic: true
+      use_cmd_vel_topic: false
+      mobile_robot_config:                <!--this values will be set when 'use_cmd_vel_topic' is true-->
+        seperation_between_wheels: 0.160  <!--default value is set by reference of TB3-->
+        radius_of_wheel: 0.033            <!--default value is set by reference of TB3-->
+    </rosparam>
+  </node>
+
+ <!-- Joint operator node -->
+  <arg name="is_loop"               default="false"/>
+
+  <param name="$(arg namespace)/trajectory_info" value="$(find dynamixel_workbench_operators)/config/test.yaml"/>
+
+  <node name="joint_operator" pkg="dynamixel_workbench_operators" type="joint_operator"
+        required="true" output="screen" ns="$(arg namespace)">
+    <param name="is_loop" value="$(arg is_loop)"/>
+  </node>
+
+
+ <!-- joy node 
+  <node respawn="true" pkg="joy"
+        type="joy_node" name="dynamixel_joy" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.12" />
+  </node>  -->
+
+ <!-- Axes -->
+  <param name="dynamixel_pos" value="2048" type="int"/>
+  <node pkg="joy_control_dynamixel" type="joy_control_dynamixel" name="control"/>
+</launch>
+
