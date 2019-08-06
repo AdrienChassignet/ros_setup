@@ -6,7 +6,8 @@ rqt_turtle_teleop is a GUI to control a turtle simulation using a joystick
 rqt_joy2dynamixel is a GUI to control a dynamixel using a joystick
 
 learning_joy is the node used to control the turtle simulation using a joystick. Run it using the launch file with :
-  roslaunch learning_joy turtle_joy.launch
+  
+    roslaunch learning_joy turtle_joy.launch
   
 joy_control_dynamixel is the node used to controlthe dynamixel using a joystick. Run it using the launch file with :
   roslaunch joy_control_dynamixel joy_control_dynamixel.launch
