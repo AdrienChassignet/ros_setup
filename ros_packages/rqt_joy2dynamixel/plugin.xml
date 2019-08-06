@@ -1,0 +1,15 @@
+<library path="lib/librqt_joy2dynamixel">
+  <class name="rqt_joy2dynamixel/MyPlugin" type="rqt_joy2dynamixel::MyPlugin" base_class_type="rqt_gui_cpp::Plugin">
+    <description>
+      GUI for control of a dynamixel with PS4 controller
+    </description>
+    <qtgui>
+      <group>
+        <label>Custom plugins</label>
+        <statustip>Plugins made for custom applications.</statustip>
+      </group>
+      <label>Joystick control of dynamixel</label>
+      <statustip>GUI for joystick control of a dynamixel.</statustip>
+    </qtgui>
+  </class>
+</library>
