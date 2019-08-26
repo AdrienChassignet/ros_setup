@@ -20,3 +20,9 @@ joy_control_dynamixel is the node used to controlthe dynamixel using a joystick.
   
 Note : the dynamixel control needs to configure several .config and .yaml file to work. 
 Use dynamixels : https://biorob2.epfl.ch/wiki/scratch:ros_setup#random_notes
+
+If not already installed, you have to install the dependent packages to use dynamixels and joystick respectively:
+
+    sudo apt-get install ros-melodic-dynamixel-workbench
+
+    sudo apt-get install ros-melodic-joy
